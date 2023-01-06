@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
-const sequelizeConnection = new Sequelize('mysql://root:mysql@localhost:3306/katlin_db');
+const sequelize = new Sequelize('mysql://root:mysql@localhost:3306/katlin_db');
 
-sequelizeConnection
+sequelize
   .authenticate()
   .then(() => {
     console.log("Connection has been established successfully.");
@@ -10,4 +10,4 @@ sequelizeConnection
     console.error("Unable to connect to the database: ", error);
   });
 
-export default sequelizeConnection;
+export default sequelize;
