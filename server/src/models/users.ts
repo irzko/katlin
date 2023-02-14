@@ -1,9 +1,15 @@
-import { DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
-import sequelize from './db';
-
+import {
+  DataTypes,
+  Model,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+} from "sequelize";
+import sequelize from "./db";
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<string>;
+  declare avatarUrl: string;
   declare firstName: string;
   declare middleName: string;
   declare lastName: string;
@@ -16,7 +22,6 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare updatedAt: CreationOptional<Date>;
 }
 
-
 User.init(
   {
     id: {
@@ -28,6 +33,9 @@ User.init(
     firstName: {
       type: DataTypes.STRING(128),
       allowNull: false,
+    },
+    avatarUrl: {
+      type: DataTypes.STRING(256),
     },
     middleName: {
       type: DataTypes.STRING(128),
@@ -54,15 +62,17 @@ User.init(
     permissionLevel: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 0,
+      defaultValue: 1,
     },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },
   {
     sequelize,
-    tableName: 'users',
+    tableName: "users",
   }
 );
+
+
 
 export default User;

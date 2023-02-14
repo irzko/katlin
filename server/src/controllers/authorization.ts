@@ -1,8 +1,8 @@
-import crypto from 'crypto';
-import jwt from 'jsonwebtoken';
-import { Request, Response } from 'express';
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
+import { Request, Response } from "express";
 
-exports.login = (req: Request, res: Response) => {
+const login = (req: Request, res: Response) => {
   const jwtSecret = "irzko";
   try {
     let refreshId = req.body.userId + jwtSecret;
@@ -24,3 +24,5 @@ exports.login = (req: Request, res: Response) => {
     return res.status(500).send({ errors: err });
   }
 };
+
+export default login;

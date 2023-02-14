@@ -1,6 +1,6 @@
 import express, { Express } from 'express';
 const cors = require('cors')
-require("./src/models/users.model");
+require("./src/models/users");
 
 const app: Express = express();
 const port = process.env.PORT;

@@ -1,0 +1,361 @@
+"use client";
+import TextField from "@mui/material/TextField";
+import { useState } from "react";
+import Grid from "@mui/material/Unstable_Grid2";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Container, { ContainerProps } from "@mui/material/Container";
+import { NextRouter, useRouter } from "next/router";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Select from "@mui/material/Select";
+import axios from "axios";
+import { styled } from "@mui/material/styles";
+import Card, { CardProps } from "@mui/material/Card";
+import NativeSelect from "@mui/material/NativeSelect";
+import { Input, InputBase } from "@mui/material";
+
+interface OptionItem {
+  label: string;
+  value: number;
+}
+
+interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
+  birthday: Date;
+  password: string;
+  gender: string;
+}
+
+const BootstrapInput = styled(InputBase)(({ theme }) => ({
+  "label + &": {
+    marginTop: theme.spacing(3),
+  },
+  "& .MuiInputBase-input": {
+    borderRadius: 4,
+    position: "relative",
+    backgroundColor: theme.palette.background.paper,
+    border: "1px solid #ced4da",
+    fontSize: 16,
+    padding: "10px 26px 10px 12px",
+    transition: theme.transitions.create(["border-color", "box-shadow"]),
+    // Use the system font instead of the default Roboto font.
+    fontFamily: [
+      "-apple-system",
+      "BlinkMacSystemFont",
+      '"Segoe UI"',
+      "Roboto",
+      '"Helvetica Neue"',
+      "Arial",
+      "sans-serif",
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(","),
+    "&:focus": {
+      borderRadius: 4,
+      borderColor: "#80bdff",
+      boxShadow: "0 0 0 0.2rem rgba(0,123,255,.25)",
+    },
+  },
+}));
+
+const month: Array<OptionItem> = [
+  { label: "Tháng 1", value: 1 },
+  { label: "Tháng 2", value: 2 },
+  { label: "Tháng 3", value: 3 },
+  { label: "Tháng 4", value: 4 },
+  { label: "Tháng 5", value: 5 },
+  { label: "Tháng 6", value: 6 },
+  { label: "Tháng 7", value: 7 },
+  { label: "Tháng 8", value: 8 },
+  { label: "Tháng 9", value: 9 },
+  { label: "Tháng 10", value: 10 },
+  { label: "Tháng 11", value: 11 },
+  { label: "Tháng 12", value: 12 },
+];
+
+const Gender: Array<OptionItem> = [
+  {
+    label: "Nam",
+    value: 1,
+  },
+  {
+    label: "Nữ",
+    value: 2,
+  },
+  {
+    label: "Khác",
+    value: 3,
+  },
+];
+
+const CardContainer = styled(Card)<CardProps>(({ theme }) => ({
+  [theme.breakpoints.down("sm")]: {
+    padding: "3rem 0",
+    border: "none",
+  },
+  [theme.breakpoints.up("sm")]: {
+    padding: "3rem",
+  },
+}));
+
+const RootContainer = styled(Container)<ContainerProps>(({ theme }) => ({
+  [theme.breakpoints.up("sm")]: {
+    display: "table-cell",
+    width: "100vw",
+    maxWidth: "none",
+    height: "100vh",
+    verticalAlign: "middle",
+  },
+}));
+
+// const TextFieldCs = styled(TextField)<TextFieldProps>(({ theme }) => ({
+//   border: "1px",
+//   [theme.breakpoints.up("sm")]: {},
+// }));
+
+const SignUp = () => {
+  const router: NextRouter = useRouter();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [birthday, setBirthday] = useState<{
+    day: string;
+    month: string;
+    year: string;
+  }>({ day: "", month: "", year: "" });
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
+
+  const handleSubmit = () => {
+    const payload: User = {
+      firstName,
+      lastName,
+      email,
+      birthday: new Date(
+        birthday.day + "-" + birthday.month + "-" + birthday.year
+      ),
+      password,
+      gender,
+    };
+    axios
+      .post(`${process.env.NEXT_PUBLIC_HOST}/signup`, payload)
+      .then(() => {
+        console.log("OK");
+      })
+      .catch((err) => {
+        console.error(payload);
+      });
+  };
+
+  return (
+    <RootContainer>
+      <Container
+        maxWidth="sm"
+        sx={{
+          padding: 0,
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <CardContainer variant="outlined">
+          <Typography variant="h5" gutterBottom>
+            Tạo tài khoản
+          </Typography>
+          <Grid container component="form" spacing={1}>
+            <Grid xs={6}>
+              <TextField
+                sx={{ marginTop: 4 }}
+                size="small"
+                onChange={(e) => setFirstName(e.target.value)}
+                fullWidth
+                id="last-name"
+                label="Họ"
+              />
+            </Grid>
+            <Grid xs={6}>
+              <TextField
+                sx={{ marginTop: 4 }}
+                size="small"
+                onChange={(e) => setLastName(e.target.value)}
+                fullWidth
+                id="first-name"
+                label="Tên"
+              />
+            </Grid>
+            <Grid xs={12}>
+              <TextField
+                sx={{ marginTop: 2 }}
+                size="small"
+                onChange={(e) => setEmail(e.target.value)}
+                fullWidth
+                label="Email"
+                id="email"
+              />
+            </Grid>
+            <Grid xs={4}>
+              <TextField
+                sx={{ marginTop: 2 }}
+                size="small"
+                onChange={(e) =>
+                  setBirthday((birthday) => {
+                    return { ...birthday, day: e.target.value };
+                  })
+                }
+                fullWidth
+                label="Ngày"
+                id="day"
+              />
+            </Grid>
+            <Grid xs={4}>
+              <FormControl sx={{ marginTop: 2 }} fullWidth>
+                <InputLabel size="small" id="month">
+                  Tháng
+                </InputLabel>
+                <Select
+                  labelId="month"
+                  size="small"
+                  id="month-select"
+                  value={birthday.month}
+                  label="Tháng"
+                  // defaultValue="1"
+                  onChange={(e) =>
+                    setBirthday((birthday) => {
+                      return { ...birthday, month: e.target.value };
+                    })
+                  }
+                >
+                  <MenuItem aria-label="None" value="" />
+                  {month.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid xs={4}>
+              <TextField
+                size="small"
+                sx={{ marginTop: 2 }}
+                onChange={(e) =>
+                  setBirthday((birthday) => {
+                    return { ...birthday, year: e.target.value };
+                  })
+                }
+                fullWidth
+                label="Năm"
+                id="year"
+              />
+            </Grid>
+            <Grid xs={12}>
+              <FormControl
+                sx={{ width: "100%", marginTop: 2 }}
+                variant="outlined"
+              >
+                <InputLabel size="small" htmlFor="password">
+                  Mật khẩu
+                </InputLabel>
+                <OutlinedInput
+                  size="small"
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  onChange={(e) => setPassword(e.target.value)}
+                  label="Password"
+                />
+                <FormHelperText>
+                  Sử dụng 8 ký tự trở lên và kết hợp chữ cái, chữ số và biểu
+                  tượng
+                </FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      onChange={(e) =>
+                        e.target.checked
+                          ? setShowPassword(true)
+                          : setShowPassword(false)
+                      }
+                    />
+                  }
+                  label="Hiện mật khẩu"
+                />
+              </FormGroup>
+            </Grid>
+            <Grid xs={12}>
+              <FormControl fullWidth>
+                <InputLabel size="small" id="gender">
+                  Giới tính
+                </InputLabel>
+                <Select
+                  labelId="gender"
+                  size="small"
+                  id="gender-select"
+                  value={gender}
+                  label="Giới tính"
+                  onChange={(e) => setGender(e.target.value)}
+                >
+                  {Gender.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid
+              xs={12}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+              }}
+            >
+              <Button
+                sx={{
+                  textTransform: "inherit",
+                  borderRadius: "50px",
+                  marginTop: 4,
+                }}
+                onClick={() => router.push("/login")}
+                variant="text"
+                size="large"
+              >
+                Đăng nhập
+              </Button>
+              <Button
+                sx={{
+                  textTransform: "inherit",
+                  borderRadius: "50px",
+                  marginTop: 4,
+                }}
+                variant="contained"
+                onClick={handleSubmit}
+                size="large"
+                disableElevation
+                color="primary"
+              >
+                Đăng ký
+              </Button>
+            </Grid>
+          </Grid>
+        </CardContainer>
+      </Container>
+    </RootContainer>
+  );
+};
+
+export default SignUp;
